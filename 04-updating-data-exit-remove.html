@@ -1,0 +1,78 @@
+<html>
+    <head>
+        <title>Data .enter() and .exit()</title>
+        <script src="https://d3js.org/d3.v5.js"></script>
+
+    </head>
+    <body>
+
+
+        <h2>Data .enter() and .exit()</h2>
+        <ul>
+            <li>.data(...)</li>
+            <li>.enter()</li>
+            <li>.exit()</li>
+            <li>.remove()</li>
+        </ul>
+
+        <!-- # HTML BODY           #####-->
+
+        <div id="container">
+            <p></p>
+        </div>
+
+        <!-- # END OF HTML BODY    ####-->
+
+        <script>
+
+            const container = d3.select('#container')
+
+            let data = [
+                { age: 3, gender: 'male' },
+                { age: 10, gender: 'female' },
+                { age: 20, gender: 'female' },
+                { age: 30, gender: 'female' },
+                { age: 15, gender: 'male'
+             }
+            ]
+
+            const updateDisplay = (data) => {
+                const p = container
+                    // select available 'p' tags
+                    .selectAll('p')
+                    // inject data
+                    .data(data)
+                    // update text
+                    .text(function(d) {
+                        return `Gender: ${d.gender}, Age: ${d.age}`
+                    });
+
+                // append missing elements as needed and update text
+                p.enter()
+                    .append('p')
+                    .text(function(d) {
+                        return `Gender: ${d.gender}, Age: ${d.age}`
+                    })
+
+                // finally remove elements as needed
+                p.exit().remove();
+            }
+
+            updateDisplay(data);
+
+            setTimeout(() => {
+                data.pop()
+                data.pop()
+                updateDisplay(data)
+            }, 3000);
+
+            setTimeout(() => {
+                data.push({ age: 75, gender: 'male' })
+                data.push({ age: 90, gender: 'female' })
+                data.push({ age: 62, gender: 'male' })
+                updateDisplay(data)
+            }, 5000);
+
+        </script>
+    </body>
+</html>

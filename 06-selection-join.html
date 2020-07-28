@@ -1,0 +1,124 @@
+<html>
+    <head>
+        <title>D3 Joins</title>
+        <script src="https://d3js.org/d3.v5.js"></script>
+        <style>
+            p { display: inline-block }
+        </style>
+    </head>
+    <body>
+        <h2>D3 Joins</h2>
+
+        <!-- # HTML BODY           #####-->
+
+        <div id="container">
+        </div>
+
+        <!-- # END OF HTML BODY    ####-->
+
+        <script>
+
+            // select the div#container
+            const container = d3.select('#container')
+            const dimensions = { width: 500, height: 500 }
+            let data = []
+
+            const randomData = (count) => {
+                const data = [];
+                while (data.length < count) {
+                    data.push({
+                        age: Math.ceil(Math.random() * 100),
+                        gender: Math.random() < .5 ? 'male' : 'female',
+                        cx: dimensions.width * Math.random(),
+                        cy: dimensions.height * Math.random()
+                    });
+                }
+                return data;
+            }
+
+            data = randomData(30);
+
+            // select the 'svg' and style
+            const svg = container
+                .append('svg')
+                .attr('width', dimensions.width)
+                .attr('height', dimensions.height)
+                .style('border', '1px solid #000')
+
+            const updateDisplay = (data) => {
+                const p = container
+                    // select available 'p' tags
+                    .selectAll('p')
+                    // inject data
+                    .data(data)
+                    // update text
+                    .text(function(d) {
+                        return `Gender: ${d.gender}, Age: ${d.age}`
+                    })
+
+                // append missing elements as needed and update text
+                p.enter()
+                    .append('p')
+                    .text(function(d) {
+                        return `Gender: ${d.gender}, Age: ${d.age}`
+                    })
+
+                // finally remove elements as needed
+                p.exit().remove()
+
+                const circles = svg.selectAll('circle')
+                    .data(data)
+
+                    svg.selectAll("text")
+                        .data(randomLetters(), d => d)
+                        .join(
+                            enter => enter.append("text")
+                                .attr("fill", "green")
+                                .attr("x", (d, i) => i * 16)
+                                .attr("y", -30)
+                                .text(d => d)
+                            .call(enter => enter.transition(t)
+                                .attr("y", 0)),
+                            update => update
+                                .attr("fill", "black")
+                                .attr("y", 0)
+                            .call(update => update.transition(t)
+                                .attr("x", (d, i) => i * 16)),
+                            exit => exit
+                                .attr("fill", "brown")
+                            .call(exit => exit.transition(t)
+                                .attr("y", 30)
+                                .remove())
+                        );
+                circles.join('circle')
+                    .attr('cx', (d, i) => dimensions.width / 2)
+                    .attr('cy', (d, i) => dimensions.height / 2)
+                    .transition(3000).delay((d, i) => i * 100)
+                    .attr('r', d => d.age)
+                    .attr('fill', d => d.gender === 'male' ? 'blue' : 'pink')
+                    .attr('cx', (d, i) => d.cx)
+                    .attr('cy', (d, i) => d.cy)
+
+                circles.exit()
+                    .transition()
+                    .attr('r', 0)
+                    .remove()
+            }
+
+            updateDisplay(data)
+
+            // remove data
+            setTimeout(() => {
+                data = data.slice(1, Math.random() * data.length)
+                updateDisplay(data)
+            }, 4000)
+
+            // add data
+            setTimeout(() => {
+                const newData = randomData(Math.ceil(Math.random() * 20))
+                data = data.concat(newData)
+                updateDisplay(data)
+            }, 7000)
+        </script>
+    </body>
+</html>

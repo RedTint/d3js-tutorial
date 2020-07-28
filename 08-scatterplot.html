@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <title>Simple Line Chart</title>
+        <script src="https://d3js.org/d3.v5.js"></script>
+        <style>
+            p { display: inline-block }
+        </style>
+    </head>
+    <body>
+        <h2>Simple Vertical Bar Chart</h2>
+
+        <!-- # HTML BODY           #####-->
+
+        <div id="container">
+        </div>
+
+        <!-- # END OF HTML BODY    ####-->
+
+        <script>
+
+            const container = d3.select('#container')
+            const width = 500 //width of svg
+            const height = 250 //height of svg
+
+            // select the 'svg' and style
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height)
+                .style('border', '1px solid #000')
+
+            const data = [
+                50,90,120,250,200,150,100,50,
+                10,40,80,60,40,70,50,90,
+                120,60,40,70,50,60,40,70
+            ]
+
+            svg.selectAll('rect')
+                .data(data)
+                .enter()
+                .append('rect')
+                .attr('x', (d, index) => index * 20)// For each, set x attr
+                .attr('y', d => height - d) // for each, set y attr
+                .attr('width', 15) // for each, set width attribute
+                .attr('height', data => data)
+                .attr('fill', 'purple')
+
+        </script>
+    </body>
+</html>

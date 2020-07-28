@@ -1,0 +1,52 @@
+<html>
+    <head>
+        <title>Scales and Axes</title>
+        <script src="https://d3js.org/d3.v5.js"></script>
+        <style>
+            p { display: inline-block }
+        </style>
+    </head>
+    <body>
+        <h2>Scales and Axes</h2>
+
+        <!-- # HTML BODY           #####-->
+
+        <div id="container">
+        </div>
+
+        <!-- # END OF HTML BODY    ####-->
+
+        <script>
+
+            const container = d3.select('#container')
+            const width = 500 //width of svg
+            const height = 250 //height of svg
+
+            // select the 'svg' and style
+            const svg = container
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height)
+                .style('border', '')
+
+            const margin = { left: 30, top: 10, right: 10, bottom: 30 }
+
+            const xScale = d3.scaleLinear()
+                .domain([0, 50])
+                .range([margin.left, width - margin.right])
+
+            const yScale = d3.scaleLinear()
+                .domain([0, 100])
+                .range([height - margin.bottom, margin.top])
+
+            const xAxis = svg.append('g')
+                .attr('transform', `translate(0, ${height - margin.bottom})`)
+                .call(d3.axisBottom(xScale))
+
+            const yAxis = svg.append('g')
+                .attr('transform', `translate(${margin.left}, 0)`)
+                .call(d3.axisLeft(yScale))
+
+        </script>
+    </body>
+</html>

@@ -1,0 +1,116 @@
+<html>
+    <head>
+        <title>Injecting and Using Data</title>
+        <script src="https://d3js.org/d3.v5.js"></script>
+
+    </head>
+    <body>
+
+
+        <h2>Injecting and Using Data</h2>
+
+        <!-- # HTML BODY           #####-->
+
+        <button id="btn-toggle">Run Update</button>
+        <div id="container">
+            <p></p>
+            <p></p>
+            <p></p>
+            <p></p>
+            <p></p>
+        </div>
+
+        <!-- # END OF HTML BODY    ####-->
+
+        <script>
+
+            const container = d3.select('#container')
+
+            // Example 1
+            let agingData = [
+                { age: 3, gender: 'male' },
+                { age: 10, gender: 'female' },
+                { age: 20, gender: 'female' },
+                { age: 30, gender: 'female' },
+                { age: 15, gender: 'male'
+             }
+            ]
+
+            // Example 2
+            let dataWithColors = [
+                {
+                    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vel urna in diam porta mattis non a libero. Ut posuere eleifend efficitur. Nullam id augue pellentesque, placerat est ac, pulvinar eros.',
+                    color: 'blue'
+                },
+                {
+                    text: 'Mauris tellus est, porta nec lobortis quis, fermentum nec mauris. Suspendisse arcu magna, vestibulum vel lorem vitae, placerat gravida leo.',
+                    color: 'red'
+                },
+                {
+                    text: 'Aliquam id dapibus est. Duis in nisi convallis, pellentesque tellus vel, bibendum lectus. Curabitur volutpat dui in ante commodo, in scelerisque erat facilisis.',
+                    color: 'green'
+                },
+                {
+                    text: 'Donec tortor est, dignissim consequat ex eget, sagittis efficitur lorem.', color: 'purple'
+                },
+                {
+                    text: 'Donec magna metus, volutpat non faucibus sed, placerat non risus. Donec rutrum nunc ac dolor sagittis ultrices. Phasellus sit amet dictum justo, sit amet maximus velit.',
+                    color: 'black'
+                }
+            ]
+
+            const runExampleOne = (data) => {
+
+                const p = container
+                    // select available 'p' tags
+                    .selectAll('p')
+
+                    // inject data
+                    .data(data)
+
+                    // add text
+                    .text(function(d) {
+                        return `Gender: ${d.gender}, Age: ${d.age}`
+                    })
+
+            }
+
+            let COEFFECIENT = 4;
+            const runExampleTwo = (data) => {
+                const p = container
+                    // select available 'p' tags
+                    .selectAll('p')
+
+                    // inject data
+                    .data(data)
+
+                    // add text
+                    .text((data) => {
+                        return data.text
+                    })
+
+                    // update attributes and style
+                    .style('color', (data) => {
+                        return data.color
+                    })
+
+                    .style('font-size', (data, index) => {
+                        const MULTIPLIER = index + 1;
+                        return MULTIPLIER * COEFFECIENT + 'px'
+                    })
+
+                    // Uncomment to animate the font-size
+                    // .style('transition', 'font-size 1s')
+            }
+
+            runExampleOne(agingData)
+            // runExampleTwo(dataWithColors, COEFFECIENT)
+
+            document.getElementById('btn-toggle').onclick = (event) => {
+                COEFFECIENT++;
+                runExampleTwo(dataWithColors, COEFFECIENT);
+            };
+
+        </script>
+    </body>
+</html>

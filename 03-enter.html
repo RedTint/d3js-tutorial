@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <title>Using .enter()</title>
+        <script src="https://d3js.org/d3.v5.js"></script>
+
+    </head>
+    <body>
+
+
+        <h2>Using .enter()</h2>
+
+        <!-- # HTML BODY           #####-->
+
+        <div id="container"></div>
+
+        <!-- # END OF HTML BODY    ####-->
+
+        <script>
+
+            const container = d3.select('#container')
+
+            // Example 1
+            let dataWithColors1 = [
+                {
+                    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vel urna in diam porta mattis non a libero. Ut posuere eleifend efficitur. Nullam id augue pellentesque, placerat est ac, pulvinar eros.',
+                    color: 'blue'
+                },
+                {
+                    text: 'Mauris tellus est, porta nec lobortis quis, fermentum nec mauris. Suspendisse arcu magna, vestibulum vel lorem vitae, placerat gravida leo.',
+                    color: 'red'
+                },
+                {
+                    text: 'Aliquam id dapibus est. Duis in nisi convallis, pellentesque tellus vel, bibendum lectus. Curabitur volutpat dui in ante commodo, in scelerisque erat facilisis.',
+                    color: 'green'
+                },
+                {
+                    text: 'Donec tortor est, dignissim consequat ex eget, sagittis efficitur lorem.', color: 'purple'
+                },
+                {
+                    text: 'Donec magna metus, volutpat non faucibus sed, placerat non risus. Donec rutrum nunc ac dolor sagittis ultrices. Phasellus sit amet dictum justo, sit amet maximus velit.',
+                    color: 'black'
+                }
+            ]
+
+            // Example 2
+            let dataWithColors2 = [
+                {
+                    text: 'Updated',
+                    color: 'blue'
+                },
+                {
+                    text: 'Donec tortor est, dignissim consequat ex eget, sagittis efficitur lorem.', color: 'purple'
+                },
+                {
+                    text: 'Donec magna metus, volutpat non faucibus sed, placerat non risus. Donec rutrum nunc ac dolor sagittis ultrices. Phasellus sit amet dictum justo, sit amet maximus velit.',
+                    color: 'black'
+                }
+            ]
+
+        </script>
+    </body>
+</html>

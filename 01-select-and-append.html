@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <title>Select, Append, Update Attributes and Style</title>
+        <script src="https://d3js.org/d3.v5.js"></script>
+    </head>
+    <body>
+
+
+        <h2>Select, Append, Update Attributes and Style</h2>
+
+        <!-- # HTML BODY           #####-->
+
+        <div id="container"></div>
+
+        <!-- # END OF HTML BODY    ####-->
+
+        <script>
+
+            // select the div#container
+            const container = d3.select('#container')
+
+            // select the 'svg' and style
+            const svg = container
+                .append('svg')
+                .attr('width', 200)
+                .attr('height', 200)
+                .style('border', '1px solid #000')
+
+            // append the circle and tyle
+            svg
+                .append('circle')
+                .attr('cx', 100)
+                .attr('cy', 100)
+                .attr('r', 50)
+                .attr('fill', 'blue')
+
+        </script>
+
+
+
+
+    </body>
+</html>
