@@ -1,0 +1,24 @@
+{
+  "name": "12-d3-prerendering",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "canvas": "^2.7.0",
+    "create-object-url": "^1.0.2",
+    "d3-node": "^2.2.2",
+    "express": "^4.17.1",
+    "install": "^0.13.0",
+    "jsdom": "^16.5.3",
+    "node-blob": "0.0.2",
+    "npm": "^7.10.0",
+    "save-svg-as-png": "^1.4.17",
+    "url": "^0.11.0"
+  }
+}
