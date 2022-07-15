@@ -1,0 +1,67 @@
+[
+    {
+        "State": "Maternal and neonatal health", 
+        "datapoints": [
+            {
+                "name": "Philippines", 
+                "value": 1
+            }, 
+            {
+                "name": "United States", 
+                "value": 5
+            }
+        ]
+    }, 
+    {
+        "State": "Behavioral health", 
+        "datapoints": [
+            {
+                "name": "Philippines", 
+                "value": 3
+            }, 
+            {
+                "name": "United States", 
+                "value": 4
+            }
+        ]
+    }, 
+    {
+        "State": "Environmental health", 
+        "datapoints": [
+            {
+                "name": "Philippines", 
+                "value": 2
+            }, 
+            {
+                "name": "United States", 
+                "value": 3
+            }
+        ]
+    }, 
+    {
+        "State": "Chronic diseases",  
+        "datapoints": [
+            {
+                "name": "Philippines", 
+                "value": 2
+            }, 
+            {
+                "name": "United States", 
+                "value": 4
+            }
+        ]
+    }, 
+    {
+        "State": "Communicable diseases", 
+        "datapoints": [
+            {
+                "name": "Philippines", 
+                "value": 3
+            }, 
+            {
+                "name": "United States", 
+                "value": 5
+            }
+        ]
+    }
+]

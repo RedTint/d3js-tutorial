@@ -1,0 +1,71 @@
+value,label,value_for_scaling,type,category,sub_group
+60plus_age,Age 60+,60plus_age,percent,Age,Age
+70plus_age,Age 70+,70plus_age,percent,Age,Age
+80plus_age,Age 80+,80plus_age,percent,Age,Age
+asthma,Asthma,asthma,percent,Chronic Conditions,Chronic Conditions
+cancer,Cancer,cancer,percent,Chronic Conditions,Chronic Conditions
+chronic_kidney_disease,Chronic Kidney Disease,chronic_kidney_disease,percent,Chronic Conditions,Chronic Conditions
+liver_disease,Chronic Liver Disease,liver_disease,percent,Chronic Conditions,Chronic Conditions
+copd,COPD,copd,percent,Chronic Conditions,Chronic Conditions
+ischemic_heart_disease,Coronary Heart Disease,ischemic_heart_disease,percent,Chronic Conditions,Chronic Conditions
+diabetes,Diabetes,diabetes,percent,Chronic Conditions,Chronic Conditions
+heart_failure,Heart Failure,heart_failure,percent,Chronic Conditions,Chronic Conditions
+hypertension,Hypertension,hypertension,percent,Chronic Conditions,Chronic Conditions
+pct_obese,Obesity,pct_obese,percent,Chronic Conditions,Chronic Conditions
+2plus_high_risk,2+ COVID-19-Relevant Chronic Conditions,2plus_high_risk,percent,Chronic Conditions,Chronic Conditions
+high_risk,Any COVID-19-Relevant Chronic Condition or Age 60+,high_risk,percent,Chronic Conditions,Chronic Conditions
+coexisting_condition,Any COVID-19-Relevant Chronic Condition,coexisting_condition,percent,Chronic Conditions,Chronic Conditions
+anxiety,Anxiety,anxiety,percent,Behavioral Health,Behavioral Health 
+bipolar,Bipolar,bipolar,percent,Behavioral Health,Behavioral Health 
+depression,Depression,depression,percent,Behavioral Health,Behavioral Health 
+sud,Substance Use Disorder,sud,percent,Behavioral Health,Behavioral Health 
+pct_alcoholuse,Excessive Drinking,pct_alcoholuse,percent,Behavioral Health,Behavioral Health 
+oud,Opioid Use Disorder,oud,percent,Behavioral Health,Behavioral Health 
+pct_adult_smoke,Tobacco Use,pct_adult_smoke,percent,Behavioral Health,Behavioral Health 
+any_bh_conditions,Any Behavioral Health Condition,any_bh_conditions,percent,Behavioral Health,Behavioral Health 
+bh_high_needs,Behavioral Health High Needs,bh_high_needs,percent,Behavioral Health,Behavioral Health 
+nursinghome_rate,Nursing Home Residents per 100k Population,nursinghome_rate_log,number,Long Term Services and Supports,Long Term Services and Supports
+pct_nf_poor_rating,Percent Nursing Homes with Poor Ratings,pct_nf_poor_rating,percent,Long Term Services and Supports,Long Term Services and Supports
+acute_hosp_all_beds_rate,Acute Hospital Beds per 100k Population,acute_hosp_all_beds_rate_log,number,Healthcare Supply,Healthcare Supply
+pcp_rate,Primary Care Physicians per 100k Population,pcp_rate_log,number,Healthcare Supply,Healthcare Supply
+pcp_mlp_rate,Primary Care Providers per 100k Population,pcp_mlp_rate_log,number,Healthcare Supply,Healthcare Supply
+any_bhprovider_rate,Mental Health Providers per 100k Population,any_bhprovider_rate_log,number,Healthcare Supply,Healthcare Supply
+bh_psychiatrist_rate,Psychiatrists per 100k Population,bh_psychiatrist_rate_log,number,Healthcare Supply,Healthcare Supply
+bh_psychologist_rate,Psychologists per 100k Population,bh_psychologist_rate_log,number,Healthcare Supply,Healthcare Supply
+pop_density,Population Density,pop_density_log,number,Population Density,Population Density
+pct_rural,Rural Population,pct_rural,percent,Population Density,Population Density
+pct_below_poverty,Poverty Rate,pct_below_poverty,percent,Economy and Jobs,Economy and Jobs
+pct_income_below_50,Below 50% Federal Poverty Level,pct_income_below_50,percent,Economy and Jobs,Economy and Jobs
+pct_unemployed,Unemployment Rate,pct_unemployed,percent,Economy and Jobs,Economy and Jobs
+pct_jobsatrisk,Employed Population with At Risk Jobs,pct_jobsatrisk,percent,Economy and Jobs,Economy and Jobs
+state_govt_assistance,State Government Assistance (Algorex),state_govt_assistance,number,Government Assistance,Government Assistance
+homeless_rate,Homeless Persons per 100K Population,homeless_rate_log,number,Housing and Household Composition,Housing and Household Composition
+homeless_indicator,Homeless Indicator (Algorex),homeless_indicator,number,Housing and Household Composition,Housing and Household Composition
+pct_severe_housing_problems,Housing Insecurity,pct_severe_housing_problems,percent,Housing and Household Composition,Housing and Household Composition
+large_households,Large Households (Algorex),large_households,number,Housing and Household Composition,Housing and Household Composition
+pct_children_from_single_parent_households,Children from Single-parent Households,pct_children_from_single_parent_households,percent,Housing and Household Composition,Housing and Household Composition
+neighborhood_stress_score,Neighborhood Stress Score (Algorex),neighborhood_stress_score,number,Community,Community
+social_isolation_score,Social Isolation Score (Algorex),social_isolation_score,number,Community,Community
+aces_score,Adverse Childhood Experiences Score (Algorex),aces_score,number,Community,Community
+algorex_sdoh_composite_score,SDoH Composite Score (Algorex),algorex_sdoh_composite_score,number,Community,Community
+transportation_access_score,Transportation Access Score (Algorex),transportation_access_score,number,Transportation,Transportation
+public_transit_access_score,Public Transit Access Score (Algorex),public_transit_access_score,number,Transportation,Transportation
+vehicle_access_score,Vehicle Access Score (Algorex),vehicle_access_score,number,Transportation,Transportation
+incarcerated_rate,Incarcerated Persons per 100K Population,incarcerated_rate_log,number,Crime and Incarceration,Crime and Incarceration
+violentcrime_rate,Violent Crimes per 100K Population,violentcrime_rate_log,number,Crime and Incarceration,Crime and Incarceration
+pct_medicaid,Medicaid Coverage,pct_medicaid,percent,Insurance Coverage,Insurance Coverage
+pct_medicare,Medicare Coverage,pct_medicare,percent,Insurance Coverage,Insurance Coverage
+pct_uninsured,Uninsured,pct_uninsured,percent,Insurance Coverage,Insurance Coverage
+pct_snap_benefits,SNAP Benefits,pct_snap_benefits,percent,Food Security,Food Security
+pct_food_insecure,Food Insecurity,pct_food_insecure,percent,Food Security,Food Security
+pct_children_on_free_or_reduced_lunchs,Children on Free or Reduced Lunch,pct_children_on_free_or_reduced_lunchs,percent,Food Security,Food Secuirty
+food_access_score,Food Access Score (Algorex),food_access_score,number,Food Security,Food Security
+pct_nativeamerican,American Indian or Alaska Native,pct_nativeamerican,percent,Race and Ethnicity,Race and Ethnicity
+pct_asian,Asian,pct_asian,percent,Race and Ethnicity,Race and Ethnicity
+pct_black_v2,Black or African American,pct_black_v2,percent,Race and Ethnicity,Race and Ethnicity
+pct_hispanic,Hispanic,pct_hispanic,percent,Race and Ethnicity,Race and Ethnicity
+pct_nativehawaiian,Native Hawaiian or Other Pacific Islander,pct_nativehawaiian,percent,Race and Ethnicity,Race and Ethnicity
+pct_white,Non-Hispanic White,pct_white,percent,Race and Ethnicity,Race and Ethnicity
+pct_othrace,Other race,pct_othrace,percent,Race and Ethnicity,Race and Ethnicity
+pct_2races,2 or more races,pct_2races,percent,Race and Ethnicity,Race and Ethnicity
+pct_minority,Racial / Ethnic Minority,pct_minority,percent,Race and Ethnicity,Race and Ethnicity

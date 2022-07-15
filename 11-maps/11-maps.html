@@ -1,0 +1,495 @@
+<html>
+    <head>
+        <title>Maps</title>
+        <script src="https://d3js.org/d3.v5.js"></script>
+        <script src="https://d3js.org/d3-geo.v1.min.js"></script>
+        <script src="https://unpkg.com/topojson@3"></script>
+        <style>
+            .hidden {
+                display: none
+            }
+
+            g.path {
+                stroke-width: .2;
+            }
+
+            svg {
+                cursor: grab;
+            }
+
+            .state, #state-mesh {
+                stroke: #dadada;
+                stroke-width: 1;
+                /* fill: #f00; */
+                fill: #fff;
+            }
+
+            #state-mesh {
+                fill: none;
+            }
+
+            .county {
+                stroke: #eaeaea;
+                stroke-width: .7;
+                /* fill: #0f0; */
+                fill: #fff;
+            }
+
+            .state:hover, .county:hover {
+                fill: #d3d3d3 !important;
+                cursor: pointer;
+            }
+
+            circle.bubble:hover {
+                cursor: pointer;
+            }
+
+            .bubble {
+                fill: #000;
+                fill-opacity: .3;
+                stroke: white;
+                stroke-width: .05;
+            }
+
+            button.active {
+                background-color: #dfd;
+            }
+
+            .state.selected,
+            .county.selected,
+            .state.selected:hover,
+            .county.selected:hover {
+                fill: #f00 !important;
+            }
+
+        </style>
+    </head>
+    <body>
+        <h2>Maps</h2>
+        <div>
+            Filter Options
+            <p>Geography <button class="active" onclick="updateGeography('state', this)">State</button><button onclick="updateGeography('county', this)">County</button></p>
+            <p><label>Metric 1</label> <select id="metric-1"><option value="">Metric 1</option></select></p>
+            <p><label>Metric 2</label> <select id="metric-2"><option value="">Metric 2</option></select></p>
+        </div>
+        <div id="details">
+            <h3>Details</h3>
+            <div id="place-name">UNITED STATES</div>
+            <div id="metric-1-details"></div>
+            <div id="metric-2-details"></div>
+        </div>
+        <script>
+            /* TODO:
+             https://phunts.atlassian.net/browse/CDM-620
+              1. [x] County should have State Borders (mesh with larger stroke-width)
+              2. [x] Bubble Metrics
+              3. [x] Choropleth Metrics
+              4. [ ] Zoom In on click - https://bl.ocks.org/mbostock/2206590
+              5. [ ] State / County Details Update on hover - NOTE: There's a mouseover event already. You just need to place the value on the Details
+              6. [ ] Tool tip of State or County name on hover - http://bl.ocks.org/lwhitaker3/e8090246a20d9515789b
+              7. [x] Focus zoom on USA only
+              8. [x] Reload metric data when geography changes
+              9. [ ] Bubble Legends (TIP: Use Scales and d3.max)
+              10. [ ] Choropleth Legends (TIP: Use Scales and d3.max)
+              11. [x] Selecting Bubbles (Metric 2) have console errors
+
+              UACs
+              1. [x] Albers Project style map where all states and regions are visible (ie: no Canada)
+              2. [x] Borders for State, and Borders for Counties (can be set on and off with a boolean)
+              3. [x] Choropleth Style and Bubble style visualization on the same map
+              4. [x] Interactive Pan and Zoom (use scrolling or mouse on desktop, pinch and touch pad for mobile)
+              5. [x] Clicking on a State or County on the Map Selects it
+              6. [ ] When a state or county is selected, move to a single state view, where the map is Zoomed in to the Selected state, and all other states are not visible. In this view always show county borders
+                 Solution: http://bl.ocks.org/ElefHead/ebff082d41ef8b9658059c408096f782
+              7. [x] Outlining a Single State or County when selected
+            */
+
+            // GEOGRAPHY TYPES
+            const COUNTY = 'county',
+                STATE = 'state'
+
+            // ELEMENT IDS
+            const METRIC_1_VALUE = 'metric-1-value'
+            const METRIC_2_VALUE = 'metric-2-value'
+
+            // SVG Dimensions & Configs
+            const width = 975,
+                height = 610,
+                rotate = 60
+
+            const config = {
+                bubble: {
+                    minWidth: 5,
+                    maxWidth: 14
+                }
+            }
+
+            // selected geography type: 'state' : 'county'
+            let geography = STATE
+
+            // DATA CONTAINERS
+            let choroplethData,
+                bubbleData
+
+            // DATA SELECTIONS
+            let metricData,
+                metric1Dropdown, // metric dropdown used for updating choropleth
+                metric2Dropdown, // metric dropdown used for updating bubble
+                metric1DropdownSelection,
+                metric2DropdownSelection,
+                hoveredData,
+                selectedFeature, // selected state or county path
+                hoveredFeature // selected state or county path
+
+            // CREATE MAP PROJECTION AND PATH
+            const projection = d3.geoAlbersUsa()
+
+                .translate([width/2, height/2])
+
+            const path = d3.geoPath()
+                .projection(projection)
+
+            // CREATE SVG
+            const svg = d3.select('body')
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height)
+                .attr('viewBox', `0 0 ${width} ${height}`)
+                .attr('id', 'map')
+                .style('border', '1px solid #777')
+                .style('background-color', '#e0dfe0')
+
+            // CREATE GROUP CONTAINERS
+            const countries = svg.append('g')
+                .attr('id', 'countries')
+            const states = svg.append('g')
+                .attr('id', 'states')
+                .classed('hidden', false)
+            const counties = svg.append('g')
+                .attr('id', 'counties')
+                .classed('hidden', true)
+            const bubbles = svg.append('g')
+                .attr('id', 'bubbles')
+
+            // ZOOM
+            let scale = 1;
+            const zoom = d3.zoom()
+                .scaleExtent([1, 8])
+                .on('zoom', () => {
+                    // get scale used when zooming map
+                    scale = d3.event.transform.k;
+                    // scale all map components
+                    svg.selectAll('g')
+                        .attr('transform', d3.event.transform)
+                    // scale bubbles
+                    bubbles.selectAll('circle')
+                        .attr('r', feature => bubbleScale(feature.bubble_data.value) / scale)
+                })
+
+            svg.call(zoom)
+
+            // DOWNLOAD MAP TOPOJSON FILES
+            const promises = []
+            const usTopoJsonUrl = 'https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json'
+            promises.push(d3.json(usTopoJsonUrl))
+
+            let worldGeoJson,
+                usTopoJson
+            console.log('Downloading map-related files...')
+
+            // WAIT FOR MAPS TO DOWNLOAD
+            Promise.all(promises)
+                .then(([_usTopoJson]) => {
+                    console.log('Done downloading map-related files...')
+                    usTopoJson = _usTopoJson
+
+                    // CONVERT TO GEOJSON!!!!!
+                    statesGeoJson = topojson.feature(usTopoJson, usTopoJson.objects.states)
+                    statesMesh = topojson.mesh(usTopoJson, usTopoJson.objects.states)
+                    countiesGeoJson = topojson.feature(usTopoJson, usTopoJson.objects.counties)
+
+                    // APPEND COUNTIES TO SVG GROUP
+                    // set onclick and onmouseover events
+                    counties.selectAll('path')
+                        .data(countiesGeoJson.features)
+                        .enter()
+                        .append('path')
+                        .attr('d', path)
+                        .attr('class', COUNTY)
+                        .attr('id', data => `county-${data.id}`)
+                        .attr('data-name', data => `county-${data.properties.name}`)
+                        .on('click', (feature) => {
+                            console.log('county clicked', feature)
+                            feature['geography'] = geography
+                            feature['choropleth_data'] = getChoroplethData(feature)
+                            feature['bubble_data'] = getBubbleData(feature)
+                            selectFeature(feature)
+                        })
+                        .on('mouseover', (feature) => {
+                            feature['geography'] = geography
+                            feature['choropleth_data'] = getChoroplethData(feature)
+                            feature['bubble_data'] = getBubbleData(feature)
+                            updateHoveredFeature(feature)
+                        })
+
+                    // Add State Borders to County
+                    counties.append('path')
+                        .attr('id', 'state-mesh')
+                        .attr('d', path(statesMesh))
+
+                    // APPEND STATES TO SVG GROUP
+                    // set onclick and onmouseover events
+                    states.selectAll('path')
+                        .data(statesGeoJson.features)
+                        .enter()
+                        .append('path')
+                        .attr('d', path)
+                        .attr('class', STATE )
+                        .attr('id', data => `state-${data.id}`)
+                        .attr('data-name', data => `state-${data.properties.name}`)
+                        .on('click', (feature) => {
+                            console.log('state clicked', feature)
+                            feature['geopraphy'] = geography
+                            feature['choropleth_data'] = getChoroplethData(feature)
+                            feature['bubble_data'] = getBubbleData(feature)
+                            selectFeature(feature)
+                        })
+                        .on('mouseover', (feature) => {
+                            feature['geography'] = geography
+                            feature['choropleth_data'] = getChoroplethData(feature)
+                            feature['bubble_data'] = getBubbleData(feature)
+                            updateHoveredFeature(feature)
+                        })
+                })
+                .catch(err => console.log(err))
+
+            const getChoroplethData = (feature) => {
+                if (!!choroplethData) {
+                    return choroplethData.find(data => {
+                        return data[geography] === feature.properties.name
+                    })
+                }
+                return null
+            }
+
+            const getBubbleData = (feature) => {
+                if (!!bubbleData) {
+                    return bubbleData.find(data => {
+                        return data[geography] === feature.properties.name
+                    })
+                }
+                return null
+            }
+
+            const selectFeature = (feature) => {
+                // if clicking the same feature, deselect
+                // otherwise, update selection
+                if (selectedFeature && feature && selectedFeature.id === feature.id) {
+                    selectedFeature = null
+                } else {
+                    selectedFeature = feature
+                }
+
+                console.log('SELECTED FEATURE', selectedFeature)
+                updateMapDisplay();
+            }
+
+            const updateMapDisplay = () => {
+                // remove highlighted selected path
+                d3.select('.selected').classed('selected', false)
+
+                // highlight selected path
+                if (selectedFeature) {
+                    const id = `#${selectedFeature.geography}-${selectedFeature.id}`
+                    d3.select(id).classed('selected', true)
+                }
+            }
+
+            const updateHoveredFeature = (feature) => {
+                hoveredFeature = feature
+                // TODO: Update Hovered Path
+                updateDetails()
+            }
+
+            // Helper function for Geography Buttons
+            const updateGeography = async (_geography, target) => {
+                // reset class names
+                console.log('GEOGRAPHY BEFORE', geography)
+                d3.selectAll('button')
+                    .classed('active', false)
+                // set geography and class name
+                geography = _geography
+                target.className = 'active'
+                console.log('Geography Changed', geography)
+                // hide/unhide counties or states path groups
+                states.classed('hidden', geography !== 'state')
+                counties.classed('hidden', geography !== 'county')
+
+                // fetch data
+                if (!!metric1DropdownSelection) choroplethData = await fetchData(metric1DropdownSelection)
+                if (!!metric2DropdownSelection) bubbleData = await fetchData(metric2DropdownSelection)
+                updateChoropleth()
+                updateBubble()
+            }
+
+            // FETCH DATA FROM API
+            const fetchData = async ([value, type]) => {
+                let url = '/api/county_data'
+                if (geography === STATE) {
+                    url = '/api/state_data'
+                }
+                const metricDataResponse = await fetch(`${url}?value=${value}&type=${type}`)
+                const data = await metricDataResponse.json()
+                return data;
+            }
+
+            // INITIATES METRIC 1 & 2 DROPDOWNS
+            const getMetricData = async () => {
+                const url = '';
+                const metricDataResponse = await fetch(url + '/api/metric_data')
+                metricData = await metricDataResponse.json()
+                metric1Dropdown = document.getElementById('metric-1')
+                metric2Dropdown = document.getElementById('metric-2')
+
+                metric1Dropdown.onchange = async (event) => {
+                    // update details
+                    updateDetails()
+                    metric1DropdownSelection = event.target.value.split('::')
+                    choroplethData = await fetchData(metric1DropdownSelection)
+                    updateChoropleth()
+                }
+
+                metric2Dropdown.onchange = async (event) => {
+                    // update details
+                    const label = event.target.selectedOptions[0].text
+                    const target = document.getElementById('metric-2-details')
+                    target.innerHTML = `<span>${label}</span><span id="metric-2-value"></span>`
+                    // fetch data and update display
+                    metric2DropdownSelection = event.target.value.split('::')
+                    bubbleData = await fetchData(metric2DropdownSelection)
+                    updateBubble()
+                }
+
+                // Update Dropdown Options
+                metricData.forEach(data => {
+                    const option1 = document.createElement("option")
+                    const option2 = document.createElement("option")
+                    option1.text = `${data.category} : ${data.label}`
+                    option1.value = `${data.value}::${data.type}`
+                    option2.text = `${data.category} : ${data.label}`
+                    option2.value = `${data.value}::${data.type}`
+
+                    metric1Dropdown.add(option1)
+                    metric2Dropdown.add(option2)
+                })
+            }
+            getMetricData()
+
+            // UPDATE DETAILS HELPER FUNCTION
+            const updateDetails = () => {
+                const label = metric1Dropdown.selectedOptions[0].text
+                const metric1Details = document.getElementById('metric-1-details')
+                // fetch data and update display
+
+                let value = '';
+                if (!!hoveredData) {
+                    suffix = hoveredData.type === 'percent' ? '%' : ''
+                    value = hoveredData.value + suffix
+                }
+                const metric1Info = generateMetricInfo(label, METRIC_1_VALUE, value)
+                metric1Details.innerHTML = metric1Info
+            }
+
+            const generateMetricInfo = (label, metricId, metricValue) => {
+                return `<span>${label}</span><span id="${metricId}">${metricValue}</span>`
+            }
+
+            // CHOROPLETH SCRIPT
+            let choroplethColorScale = d3.scaleLinear()
+            const updateChoropleth = () => {
+                if (!choroplethData || !choroplethData.length) return
+                console.log('Updating choropleth...')
+
+                if (metric1DropdownSelection && !metric1DropdownSelection[0]) {
+                    states.selectAll('path')
+                        .style('fill', null)
+                    return
+                }
+
+                let target = geography === STATE ? states : counties
+                let prefix = geography === STATE ? STATE: COUNTY
+                const min = d3.min(choroplethData, data => data.value)
+                const max = d3.max(choroplethData, data => data.value)
+                choroplethColorScale = d3.scaleLinear()
+                    .domain([0, max])
+                    .range(['#c0ebf3', '#3dacf3'])
+                    // .range(['#94DEF1', '#7FD7F1', '#6ACFF2',
+                    //     '#55C8F2', '#40C0F2', '#2BB9F3', '#16B1F3', '#01AAF4'])
+
+                choroplethData.forEach(data => {
+                    const selector = `[data-name="${prefix}-${data[prefix]}"]`;
+                    target.select(selector)
+                        .style('fill', choroplethColorScale(data.value))
+                });
+            }
+
+            // BUBBLE SCRIPT
+            let bubbleScale = d3.scaleLinear()
+            const updateBubble = () => {
+                if (!bubbleData || !bubbleData.length) return
+
+                console.log('Updating bubble...')
+                console.log('CONFIG', config)
+                let target = geography === STATE ? states : counties
+                let prefix = geography === STATE ? STATE: COUNTY
+                const min = d3.min(bubbleData, data => data.value)
+                const max = d3.max(bubbleData, data => data.value)
+                bubbleScale = d3.scaleLinear()
+                    .domain([0, max])
+                    .range([0, config.bubble.maxWidth])
+
+                bubbles.selectAll('circle').remove()
+                target.selectAll('path')
+                    .each((feature, i) => {
+                        if(!feature) return
+
+                        const name = feature.properties.name
+                        const data = bubbleData.find(d => d[prefix] === name)
+                        feature['bubble_data'] = data
+
+                        // append circle if data found
+                        if (data) {
+                            const center = path.centroid(feature);
+                            const hasNoCenter = !center.length
+                            const isInvalidRadius = isNaN(bubbleScale(feature.bubble_data.value))
+                            const isInvalidCentroid = center.length && isNaN(center[0]) || isNaN(center[1])
+                            // ignore invalid values
+                            if (hasNoCenter || isInvalidCentroid || isInvalidRadius) return
+
+                            bubbles.append('circle')
+                                .data([feature])
+                                .attr('class', 'bubble')
+                                .attr('cx', center[0])
+                                .attr('cy', center[1])
+                                .attr('r', feature => bubbleScale(feature.bubble_data.value) / scale)
+                                .attr('data-value', feature => feature.bubble_data.value)
+                                .attr('data-metric', feature => feature.bubble_data.metric)
+                                .on('click', feature => {
+                                    feature['geography'] = geography
+                                    feature['choropleth_data'] = getChoroplethData(feature)
+                                    feature['bubble_data'] = getBubbleData(feature)
+                                    selectFeature(feature)
+                                })
+                                .on('mouseover', feature => {
+                                    feature['geography'] = geography
+                                    feature['choropleth_data'] = getChoroplethData(feature)
+                                    feature['bubble_data'] = getBubbleData(feature)
+                                    updateHoveredFeature(feature)
+                                })
+                        }
+                    })
+            }
+
+        </script>
+    </body>
+</html>

@@ -1,0 +1,200 @@
+[
+    {
+        "State": "CA", 
+        "ages": [
+            {
+                "name": "Under 5 Years", 
+                "value": 2704659
+            }, 
+            {
+                "name": "5 to 13 Years", 
+                "value": 4499890
+            }, 
+            {
+                "name": "14 to 17 Years", 
+                "value": 2159981
+            }, 
+            {
+                "name": "18 to 24 Years", 
+                "value": 3853788
+            }, 
+            {
+                "name": "25 to 44 Years", 
+                "value": 10604510
+            }, 
+            {
+                "name": "45 to 64 Years", 
+                "value": 8819342
+            }, 
+            {
+                "name": "65 Years and Over", 
+                "value": 4114496
+            }
+        ]
+    }, 
+    {
+        "State": "TX", 
+        "ages": [
+            {
+                "name": "Under 5 Years", 
+                "value": 2027307
+            }, 
+            {
+                "name": "5 to 13 Years", 
+                "value": 3277946
+            }, 
+            {
+                "name": "14 to 17 Years", 
+                "value": 1420518
+            }, 
+            {
+                "name": "18 to 24 Years", 
+                "value": 2454721
+            }, 
+            {
+                "name": "25 to 44 Years", 
+                "value": 7017731
+            }, 
+            {
+                "name": "45 to 64 Years", 
+                "value": 5656528
+            }, 
+            {
+                "name": "65 Years and Over", 
+                "value": 2472223
+            }
+        ]
+    }, 
+    {
+        "State": "NY", 
+        "ages": [
+            {
+                "name": "Under 5 Years", 
+                "value": 1208495
+            }, 
+            {
+                "name": "5 to 13 Years", 
+                "value": 2141490
+            }, 
+            {
+                "name": "14 to 17 Years", 
+                "value": 1058031
+            }, 
+            {
+                "name": "18 to 24 Years", 
+                "value": 1999120
+            }, 
+            {
+                "name": "25 to 44 Years", 
+                "value": 5355235
+            }, 
+            {
+                "name": "45 to 64 Years", 
+                "value": 5120254
+            }, 
+            {
+                "name": "65 Years and Over", 
+                "value": 2607672
+            }
+        ]
+    }, 
+    {
+        "State": "FL",  
+        "ages": [
+            {
+                "name": "Under 5 Years", 
+                "value": 1140516
+            }, 
+            {
+                "name": "5 to 13 Years", 
+                "value": 1938695
+            }, 
+            {
+                "name": "14 to 17 Years", 
+                "value": 925060
+            }, 
+            {
+                "name": "18 to 24 Years", 
+                "value": 1607297
+            }, 
+            {
+                "name": "25 to 44 Years", 
+                "value": 4782119
+            }, 
+            {
+                "name": "45 to 64 Years", 
+                "value": 4746856
+            }, 
+            {
+                "name": "65 Years and Over", 
+                "value": 3187797
+            }
+        ]
+    }, 
+    {
+        "State": "IL", 
+        "ages": [
+            {
+                "name": "Under 5 Years", 
+                "value": 894368
+            }, 
+            {
+                "name": "5 to 13 Years", 
+                "value": 1558919
+            }, 
+            {
+                "name": "14 to 17 Years", 
+                "value": 725973
+            }, 
+            {
+                "name": "18 to 24 Years", 
+                "value": 1311479
+            }, 
+            {
+                "name": "25 to 44 Years", 
+                "value": 3596343
+            }, 
+            {
+                "name": "45 to 64 Years", 
+                "value": 3239173
+            }, 
+            {
+                "name": "65 Years and Over", 
+                "value": 1575308
+            }
+        ]
+    }, 
+    {
+        "State": "PA",  
+        "ages": [
+            {
+                "name": "Under 5 Years", 
+                "value": 737462
+            }, 
+            {
+                "name": "5 to 13 Years", 
+                "value": 1345341
+            }, 
+            {
+                "name": "14 to 17 Years", 
+                "value": 679201
+            }, 
+            {
+                "name": "18 to 24 Years", 
+                "value": 1203944
+            }, 
+            {
+                "name": "25 to 44 Years", 
+                "value": 3157759
+            }, 
+            {
+                "name": "45 to 64 Years", 
+                "value": 3414001
+            }, 
+            {
+                "name": "65 Years and Over", 
+                "value": 1910571
+            }
+        ]
+    }
+]
